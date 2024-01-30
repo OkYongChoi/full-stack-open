@@ -4,14 +4,17 @@ const Button = ({handleClick, text}) => (
  <button onClick={handleClick}>{text}</button>
 )
 
-const StatisticLine = ({text, score}) => {
-  return <p> {text} {score} </p>
-}
+const StatisticLine = ({text, score}) => (
+  <tr>
+    <td> {text} </td>
+    <td> {score} </td>
+  </tr> 
+)
 
 const Statistics = ({good, neutral, bad}) => {
   const all = good + neutral + bad
-  const avg = (good - bad) / all
-  const pos = String((good/all) * 100)+'%'
+  const avg = ((good - bad) / all).toFixed(1)
+  const pos = ((good/all) * 100).toFixed(1)+'%'
   if (all === 0) {
     return (
       <p>
@@ -21,12 +24,16 @@ const Statistics = ({good, neutral, bad}) => {
   }
   return (
     <>
-      <StatisticLine text="good" score={good}/>
-      <StatisticLine text="neutral" score={neutral}/>
-      <StatisticLine text="bad" score={bad}/>
-      <StatisticLine text="all" score={all}/>
-      <StatisticLine text="average" score={avg}/>
-      <StatisticLine text="positive" score={pos}/>   
+      <table>
+        <tbody>
+          <StatisticLine text="good" score={good}/>
+          <StatisticLine text="neutral" score={neutral}/>
+          <StatisticLine text="bad" score={bad}/>
+          <StatisticLine text="all" score={all}/>
+          <StatisticLine text="average" score={avg}/>
+          <StatisticLine text="positive" score={pos}/>
+        </tbody>
+      </table>
     </>
   )
 }
