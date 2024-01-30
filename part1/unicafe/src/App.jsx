@@ -12,6 +12,13 @@ const Statistics = ({good, neutral, bad}) => {
   const all = good + neutral + bad
   const avg = (good - bad) / all
   const pos = String((good/all) * 100)+'%'
+  if (all === 0) {
+    return (
+      <p>
+        No feedback given 
+      </p>
+    )
+  }
   return (
     <>
       <StatLine measure="good" score={good}/>
@@ -32,7 +39,6 @@ const App = () => {
   const setToGood = () => setGood(good + 1)
   const setToNeutral = () => setNeutral(neutral + 1)
   const setToBad = () => setBad(bad + 1)
-  
 
 
   return(
