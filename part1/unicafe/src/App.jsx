@@ -4,8 +4,8 @@ const Button = ({handleClick, text}) => (
  <button onClick={handleClick}>{text}</button>
 )
 
-const StatLine = ({measure, score}) => {
-  return <p> {measure} {score} </p>
+const StatisticLine = ({text, score}) => {
+  return <p> {text} {score} </p>
 }
 
 const Statistics = ({good, neutral, bad}) => {
@@ -21,12 +21,12 @@ const Statistics = ({good, neutral, bad}) => {
   }
   return (
     <>
-      <StatLine measure="good" score={good}/>
-      <StatLine measure="neutral" score={neutral}/>
-      <StatLine measure="bad" score={bad}/>
-      <StatLine measure="all" score={all}/>
-      <StatLine measure="average" score={avg}/>
-      <StatLine measure="positive" score={pos}/>   
+      <StatisticLine text="good" score={good}/>
+      <StatisticLine text="neutral" score={neutral}/>
+      <StatisticLine text="bad" score={bad}/>
+      <StatisticLine text="all" score={all}/>
+      <StatisticLine text="average" score={avg}/>
+      <StatisticLine text="positive" score={pos}/>   
     </>
   )
 }
