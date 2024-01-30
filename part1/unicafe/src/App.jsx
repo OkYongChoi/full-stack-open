@@ -8,6 +8,22 @@ const StatLine = ({measure, score}) => {
   return <p> {measure} {score} </p>
 }
 
+const Statistics = ({good, neutral, bad}) => {
+  const all = good + neutral + bad
+  const avg = (good - bad) / all
+  const pos = String((good/all) * 100)+'%'
+  return (
+    <>
+      <StatLine measure="good" score={good}/>
+      <StatLine measure="neutral" score={neutral}/>
+      <StatLine measure="bad" score={bad}/>
+      <StatLine measure="all" score={all}/>
+      <StatLine measure="average" score={avg}/>
+      <StatLine measure="positive" score={pos}/>   
+    </>
+  )
+}
+
 const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
@@ -17,9 +33,7 @@ const App = () => {
   const setToNeutral = () => setNeutral(neutral + 1)
   const setToBad = () => setBad(bad + 1)
   
-  const all = good + neutral + bad
-  const avg = (good - bad) / all
-  const pos = String((good/all) * 100)+'%'
+
 
   return(
     <>
@@ -29,12 +43,7 @@ const App = () => {
       <Button handleClick={()=>setToBad()} text="bad"/>
 
       <h1>statistics</h1>
-      <StatLine measure="good" score={good}/>
-      <StatLine measure="neutral" score={neutral}/>
-      <StatLine measure="bad" score={bad}/>
-      <StatLine measure="all" score={all}/>
-      <StatLine measure="average" score={avg}/>
-      <StatLine measure="positive" score={pos}/>      
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </>
   )
 }
