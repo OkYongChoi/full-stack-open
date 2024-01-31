@@ -29,13 +29,25 @@ const App = () => {
     const randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
     setSelected(randomInt)
   }
+
+  const argMax = (array) => {
+    const maxValue = Math.max(...array);
+    const maxIndex = array.indexOf(maxValue);
+    return maxIndex;
+  }
+
+
   return (
     <>
       <div>
         {anecdotes[selected]} <br /> has {points[selected]} votes.
       </div>
       <Button handleClick={()=>vote()} text="vote"/>
-      <Button handleClick={nextAnecdote()} text="next anecdote"/>
+      <Button handleClick={()=>nextAnecdote()} text="next anecdote"/>
+      <div>
+        <h1>Anecdote with most votes</h1>
+        {anecdotes[argMax(points)]}
+      </div>
     </>
   )
 }
