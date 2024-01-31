@@ -17,7 +17,13 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
-  const nextAnecdote = (anecdotes) => {
+  const [points, setPoints] = useState(new Uint8Array(anecdotes.length))
+  const vote = () => {
+    const newPoints = [...points]
+    newPoints[selected] += 1
+    setPoints(newPoints)
+  }
+  const nextAnecdote = () => {
     const min = 0;
     const max = anecdotes.length - 1
     const randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -26,12 +32,11 @@ const App = () => {
   return (
     <>
       <div>
-        {anecdotes[selected]}
+        {anecdotes[selected]} <br /> has {points[selected]} votes.
       </div>
-      <Button handleClick={()=>nextAnecdote(anecdotes)} text="next anecdote"/>
+      <Button handleClick={()=>vote()} text="vote"/>
+      <Button handleClick={nextAnecdote()} text="next anecdote"/>
     </>
-    
-    
   )
 }
 
