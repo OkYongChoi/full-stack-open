@@ -6,11 +6,13 @@ const Part = (props) => (
 )
 
 const Content = ({parts}) => {
+  const total = parts.reduce((acc,cur)=>acc+cur.exercises, 0)
   return (
     <div>
       {parts.map(part=>
         <Part key={part.id} part={part}/>
       )}
+      <p><b>Total of {total} exercises</b></p>
     </div>
   )
 }
