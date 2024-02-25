@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import phonebookService from './services/phonebook'
 import axios from 'axios'
 
 const Filter = ({ nameFilter, handleFilter }) => (
@@ -54,8 +55,8 @@ const App = () => {
   const [nameEntered, setNameEntered] = useState('')
 
   const hook = () => {
-    axios.get('http://localhost:3001/persons').then((response) => {
-      setPersons(response.data)
+    phonebookService.getAll().then((initialPhonebook) => {
+      setPersons(initialPhonebook)
     })
   }
   useEffect(hook, [])
@@ -70,12 +71,10 @@ const App = () => {
         name: newName,
         number: newNumber,
       }
-      axios.post('http://localhost:3001/persons', personObject)
-      .then( response => {
-        setPersons(persons.concat(response.data))
+      phonebookService.create(personObject).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson))
         setNewName('')
       })
-     
     }
   }
 
