@@ -65,14 +65,29 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    const isIncluded = persons.some((person) => person.name === newName)
-    if (isIncluded) {
-      alert(`${newName} is already added to phonebook`)
-    } else {
-      const personObject = {
-        name: newName,
-        number: newNumber,
+    const personObject = {
+      name: newName,
+      number: newNumber,
+    }
+    const existed = persons.find((person) => person.name === newName)
+    if (existed) {
+      if (
+        window.confirm(
+          `${newName} is already added to the phonebook, replace the older number with the new one?`,
+        )
+      ) {
+        phonebookService
+          .updatePerson(existed.id, personObject)
+          .then((returnedPerson) =>
+            setPersons(
+              persons.map((person) =>
+                person.id !== existed.id ? person : returnedPerson,
+              ),
+            ),
+          )
+      } else {
       }
+    } else {
       phonebookService.create(personObject).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
@@ -83,9 +98,15 @@ const App = () => {
   const handleDelete = (person) => {
     const id = person.id
     if (window.confirm(`Delete ${person.name}`)) {
-      phonebookService.deletePerson(id).then((returnedPerson) => {
-        setPersons(persons.filter((person) => person.id != returnedPerson.id))
-      })
+      phonebookService
+        .deletePerson(id)
+        .then((returnedPerson) => {
+          setPersons(persons.filter((person) => person.id != returnedPerson.id))
+        })
+        .catch((error) => {
+          alert(`'${person.name}' was already deleted from server`)
+          setPersons(persons.filter((person) => person.id !== id))
+        })
     } else {
     }
   }
