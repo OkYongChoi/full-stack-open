@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import phonebookService from './services/phonebook'
-import axios from 'axios'
 
 const Filter = ({ nameFilter, handleFilter }) => (
   <div>
@@ -28,7 +27,7 @@ const PersonForm = ({
     </div>
   </form>
 )
-const Persons = ({ persons, filterName }) => {
+const Persons = ({ persons, filterName, handleDelete }) => {
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(filterName.toLowerCase()),
   )
@@ -40,6 +39,9 @@ const Persons = ({ persons, filterName }) => {
             <tr key={person.name}>
               <td>{person.name}</td>
               <td>{person.number}</td>
+              <td>
+                <button onClick={() => handleDelete(person)}>delete</button>
+              </td>
             </tr>
           )
         })}
@@ -78,6 +80,16 @@ const App = () => {
     }
   }
 
+  const handleDelete = (person) => {
+    const id = person.id
+    if (window.confirm(`Delete ${person.name}`)) {
+      phonebookService.deletePerson(id).then((returnedPerson) => {
+        setPersons(persons.filter((person) => person.id != returnedPerson.id))
+      })
+    } else {
+    }
+  }
+
   const handleNameEntered = (event) => {
     setNameEntered(event.target.value)
   }
@@ -101,7 +113,11 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filterName={nameEntered} />
+      <Persons
+        persons={persons}
+        filterName={nameEntered}
+        handleDelete={handleDelete}
+      />
     </div>
   )
 }
