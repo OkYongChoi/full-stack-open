@@ -1,60 +1,13 @@
 import { useEffect, useState } from 'react'
 import phonebookService from './services/phonebook'
-
-const Filter = ({ nameFilter, handleFilter }) => (
-  <div>
-    Filter Shown With <input value={nameFilter} onChange={handleFilter} />
-  </div>
-)
-
-const PersonForm = ({
-  handleSubmit,
-  name,
-  number,
-  handleNameChange,
-  handleNumberChange,
-}) => (
-  <form onSubmit={handleSubmit}>
-    <div>
-      name: <input value={name} onChange={handleNameChange} />
-    </div>
-    <div>
-      number: <input value={number} onChange={handleNumberChange} />
-    </div>
-
-    <div>
-      <button type='submit'>add</button>
-    </div>
-  </form>
-)
-const Persons = ({ persons, filterName, handleDelete }) => {
-  const filteredPersons = persons.filter((person) =>
-    person.name.toLowerCase().includes(filterName.toLowerCase()),
-  )
-  return (
-    <table>
-      <tbody>
-        {filteredPersons.map((person) => {
-          return (
-            <tr key={person.name}>
-              <td>{person.name}</td>
-              <td>{person.number}</td>
-              <td>
-                <button onClick={() => handleDelete(person)}>delete</button>
-              </td>
-            </tr>
-          )
-        })}
-      </tbody>
-    </table>
-  )
-}
+import { Filter, PersonForm, Persons, Notification } from './components/Phonebook'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [nameEntered, setNameEntered] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   const hook = () => {
     phonebookService.getAll().then((initialPhonebook) => {
@@ -85,12 +38,25 @@ const App = () => {
               ),
             ),
           )
+          setNotificationMessage(
+            `Replaced the Phone Number of ${personObject.name}`
+          )
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)          
       } else {
       }
     } else {
       phonebookService.create(personObject).then((returnedPerson) => {
+        
         setPersons(persons.concat(returnedPerson))
         setNewName('')
+        setNotificationMessage(
+          `Added ${personObject.name}`
+        )
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000) 
       })
     }
   }
@@ -124,6 +90,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage}/>
       <Filter nameFilter={nameEntered} handleFilter={handleNameEntered} />
       <h3>Add a New</h3>
       <PersonForm
