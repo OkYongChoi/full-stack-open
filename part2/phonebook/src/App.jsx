@@ -8,6 +8,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [nameEntered, setNameEntered] = useState('')
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [isError, setIsError] = useState(false)
 
   const hook = () => {
     phonebookService.getAll().then((initialPhonebook) => {
@@ -31,19 +32,30 @@ const App = () => {
       ) {
         phonebookService
           .updatePerson(existed.id, personObject)
-          .then((returnedPerson) =>
+          .then((returnedPerson) =>{
             setPersons(
               persons.map((person) =>
                 person.id !== existed.id ? person : returnedPerson,
-              ),
-            ),
+              ), 
+            )
+            setNotificationMessage(
+              `Replaced the Phone Number of ${personObject.name}`
+            )
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 2000)}   
           )
-          setNotificationMessage(
-            `Replaced the Phone Number of ${personObject.name}`
+          .catch((error)=>{
+            setNotificationMessage(
+              `Information of ${personObject.name} has already been removed from the server`
+            )
+            setIsError(true)
+            setTimeout(() => {
+              setNotificationMessage(null)
+              setIsError(false)
+            }, 2000)}
           )
-          setTimeout(() => {
-            setNotificationMessage(null)
-          }, 5000)          
+       
       } else {
       }
     } else {
@@ -56,7 +68,7 @@ const App = () => {
         )
         setTimeout(() => {
           setNotificationMessage(null)
-        }, 5000) 
+        }, 2000) 
       })
     }
   }
@@ -90,7 +102,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage}/>
+      <Notification message={notificationMessage} error={isError}/>
       <Filter nameFilter={nameEntered} handleFilter={handleNameEntered} />
       <h3>Add a New</h3>
       <PersonForm

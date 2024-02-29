@@ -47,8 +47,8 @@ export const PersonForm = ({
     )
   }
 
-export const Notification = ({ message }) => {
-  const notificationStyle = {
+export const Notification = ({ message, error }) => {
+  let notificationStyle = {
     color: 'green',
     background: 'lightgrey',
     fontSize: 20,
@@ -59,6 +59,10 @@ export const Notification = ({ message }) => {
   }
   if (message === null) {
     return null
+  }
+
+  if (error===true) {
+    notificationStyle = {...notificationStyle, color:'red'}
   }
 
   return (
