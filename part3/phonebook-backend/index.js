@@ -1,6 +1,7 @@
 const express = require('express')
 
 const app = express()
+app.use(express.json())
 
 let persons = [
   {
@@ -39,7 +40,6 @@ app.get('/api/persons/:id', (request, response) => {
 
   if (!person) {
     response.status(404).end()
-    console.log(response)
   } else {
     response.json(person)
   }
@@ -57,6 +57,30 @@ app.get('/info', (request, response) => {
     `<p>Phonebook has info for ${persons.length}</p>
      <p>${Date()}</p>`,
   )
+})
+
+
+const generateId = () => {
+  return Math.floor(Math.random() * 100) + Math.max(...persons.map(p => p.id));
+}
+
+app.post('/api/persons',(request, response) => {
+
+  const body = request.body
+  if(!body.name) {    
+    return response.status(400).json({
+      error: 'content missing'
+    })
+  }
+  const person = {
+    name : body.name,
+    number: body.number,
+    id: generateId()
+  }
+  persons = persons.concat(person)
+  console.log(person)
+  response.json(persons)
+
 })
 
 const PORT = 3001
