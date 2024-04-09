@@ -1,7 +1,10 @@
 const express = require('express')
+const morgan = require('morgan')
 
 const app = express()
 app.use(express.json())
+app.use(morgan('tiny'))
+
 
 let persons = [
   {
@@ -85,9 +88,7 @@ app.post('/api/persons',(request, response) => {
     id: generateId()
   }
   persons = persons.concat(person)
-  console.log(person)
   response.json(persons)
-
 })
 
 const PORT = 3001
