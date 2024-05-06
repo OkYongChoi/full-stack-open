@@ -15,3 +15,11 @@ content-type: application/json
     "number": "444-4444-4444"
 }
 
+###
+POST https://fso-phonebook-okd.fly.dev/api/persons HTTP/1.1
+content-type: application/json
+
+{
+    "name": "jfk",
+    "number": "444-4444-4444"
+}

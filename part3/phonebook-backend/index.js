@@ -1,6 +1,8 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors =  require('cors')
+const fs = require('fs');
+const markdown = require('markdown-it')();
 
 const app = express()
 app.use(cors())
@@ -40,7 +42,15 @@ let persons = [
 ]
 
 app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
+  fs.readFile('README.md', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      response.status(500).send('Internal Server Error');
+      return;
+    }
+    const htmlContent = markdown.render(data);
+    response.send(htmlContent);
+  });
 })
 
 app.get('/api/persons', (request, response) => {
@@ -101,7 +111,7 @@ app.post('/api/persons',(request, response) => {
   response.json(persons)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
