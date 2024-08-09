@@ -1,8 +1,10 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors =  require('cors')
 const fs = require('fs');
 const markdown = require('markdown-it')();
+const Person = require('./models/person')
 
 const app = express()
 app.use(cors())
@@ -19,29 +21,6 @@ app.use(morgan(function (tokens, req, res) {
   ].join(' ')
 }))
 
-let persons = [
-  {
-    id: 1,
-    name: 'Arto Hellas',
-    number: '040-123456',
-  },
-  {
-    id: 2,
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-  },
-  {
-    id: 3,
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-  },
-  {
-    id: 4,
-    name: 'Mary Poppendieck',
-    number: '39-23-6423122',
-  },
-]
-
 app.get('/', (request, response) => {
   fs.readFile('README.md', 'utf8', (err, data) => {
     if (err) {
@@ -55,18 +34,16 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.find({}).then(person => {
+    response.json(person)
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.find((p) => p.id === id)
-
-  if (!person) {
-    response.status(404).end()
-  } else {
-    response.json(person)
-  }
+  Person.findById(response.params.id)
+    .then(person => {
+      response.json(person)
+    })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -84,32 +61,26 @@ app.get('/info', (request, response) => {
 })
 
 
-const generateId = () => {
-  return Math.floor(Math.random() * 100) + Math.max(...persons.map(p => p.id));
-}
-
 app.post('/api/persons',(request, response) => {
 
   const body = request.body
-  if(!body.name || !body.number) {    
+  if(body.name === undefined) {    
     return response.status(400).json({
-      error: 'content missing'
+      error: 'name missing'
+    })
+  } else if(body.number === undefined) {
+    return response.status(400).json({
+      error: 'number missing'
     })
   }
 
-  if(persons.some(p=>p.name === body.name)) {
-    return response.status(409).json({
-      error: 'name must be unique'
-    })
-  }
-
-  const person = {
+  const person = new Person({
     name : body.name,
     number: body.number,
-    id: generateId()
-  }
-  persons = persons.concat(person)
-  response.json(persons)
+  })
+  person.save().then(savedPerson =>
+    response.json(savedPerson)
+  )
 })
 
 const PORT = process.env.PORT || 3001
