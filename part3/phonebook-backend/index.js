@@ -53,12 +53,18 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.get('/info', (request, response) => {
-  response.send(
-    `<p>Phonebook has info for ${persons.length}</p>
-     <p>${Date()}</p>`,
-  )
-})
+app.get('/info', async (request, response) => {
+  try {
+    const count = await Person.countDocuments();
+    response.send(
+      `<p>Phonebook has info for ${count} documents</p>
+       <p>${new Date()}</p>`
+    );
+  } catch (error) {
+    console.error('Error fetching document count:', error);
+    response.status(500).send('Internal server error');
+  }
+});
 
 
 app.post('/api/persons',(request, response) => {
@@ -81,6 +87,23 @@ app.post('/api/persons',(request, response) => {
   person.save().then(savedPerson =>
     response.json(savedPerson)
   )
+})
+
+
+app.put('/api/persons/:id',(request, response, next) => {
+
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person.findOneAndUpdate({name: body.name}, person, {new: false})
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
