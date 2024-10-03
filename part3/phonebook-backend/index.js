@@ -68,7 +68,7 @@ app.get('/info', async (request, response) => {
 
 
 app.post('/api/persons',(request, response) => {
-
+  
   const body = request.body
   if(body.name === undefined) {    
     return response.status(400).json({

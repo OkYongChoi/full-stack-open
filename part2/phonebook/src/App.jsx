@@ -78,8 +78,8 @@ const App = () => {
     if (window.confirm(`Delete ${person.name}`)) {
       phonebookService
         .deletePerson(id)
-        .then((returnedPerson) => {
-          setPersons(persons.filter((person) => person.id != returnedPerson.id))
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id))
         })
         .catch((error) => {
           alert(`'${person.name}' was already deleted from server`)
