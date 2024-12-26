@@ -51,6 +51,7 @@ const App = () => {
             }, 2000)
           })
           .catch((error) => {
+            console.log(error)
             setNotificationMessage(
               `Information of ${personObject.name} has already been removed from the server`,
             )
@@ -63,15 +64,25 @@ const App = () => {
       } else {
       }
     } else {
-      phonebookService.create(personObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNewNumber('')
-        setNotificationMessage(`Added ${personObject.name}`)
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 2000)
-      })
+      phonebookService
+        .create(personObject)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          setNotificationMessage(`Added ${personObject.name}`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 2000)
+        })
+        .catch((error) => {
+          setNotificationMessage(`${error.response.data.error}`)
+          setIsError(true)
+          setTimeout(() => {
+            setNotificationMessage(null)
+            setIsError(false)
+          }, 2000)
+        })
     }
   }
 
