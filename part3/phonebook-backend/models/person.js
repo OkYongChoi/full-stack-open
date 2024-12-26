@@ -16,7 +16,18 @@ mongoose
 const personSchema = new mongoose.Schema({
   // name: String,
   name: { type: String, minLength: 3, required: true },
-  number: String,
+  number: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (value) {
+        const phoneRegex = /^(\d{2,3})-(\d{4,})$/
+        return phoneRegex.test(value)
+      },
+      message:
+        'Phone number must be in the format: XX-XXXXXXXX or XXX-XXXXXXXX where X is a digit.',
+    },
+  },
 })
 
 personSchema.set('toJSON', {
