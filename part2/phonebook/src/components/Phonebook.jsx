@@ -1,51 +1,51 @@
 export const Filter = ({ nameFilter, handleFilter }) => (
-    <div>
-      Filter Shown With <input value={nameFilter} onChange={handleFilter} />
-    </div>
-  )
-  
+  <div>
+    Filter Shown With <input value={nameFilter} onChange={handleFilter} />
+  </div>
+)
+
 export const PersonForm = ({
-    handleSubmit,
-    name,
-    number,
-    handleNameChange,
-    handleNumberChange,
-  }) => (
-    <form onSubmit={handleSubmit}>
-      <div>
-        name: <input value={name} onChange={handleNameChange} />
-      </div>
-      <div>
-        number: <input value={number} onChange={handleNumberChange} />
-      </div>
-  
-      <div>
-        <button type='submit'>add</button>
-      </div>
-    </form>
+  handleSubmit,
+  name,
+  number,
+  handleNameChange,
+  handleNumberChange,
+}) => (
+  <form onSubmit={handleSubmit}>
+    <div>
+      name: <input value={name} onChange={handleNameChange} />
+    </div>
+    <div>
+      number: <input value={number} onChange={handleNumberChange} />
+    </div>
+
+    <div>
+      <button type='submit'>add</button>
+    </div>
+  </form>
+)
+export const Persons = ({ persons, filterName, handleDelete }) => {
+  const filteredPersons = persons.filter((person) =>
+    person.name.toLowerCase().includes(filterName.toLowerCase()),
   )
-  export const Persons = ({ persons, filterName, handleDelete }) => {
-    const filteredPersons = persons.filter((person) =>
-      person.name.toLowerCase().includes(filterName.toLowerCase()),
-    )
-    return (
-      <table>
-        <tbody>
-          {filteredPersons.map((person) => {
-            return (
-              <tr key={person.name}>
-                <td>{person.name}</td>
-                <td>{person.number}</td>
-                <td>
-                  <button onClick={() => handleDelete(person)}>delete</button>
-                </td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-    )
-  }
+  return (
+    <table>
+      <tbody>
+        {filteredPersons.map((person) => {
+          return (
+            <tr key={person.name}>
+              <td>{person.name}</td>
+              <td>{person.number}</td>
+              <td>
+                <button onClick={() => handleDelete(person)}>delete</button>
+              </td>
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
+  )
+}
 
 export const Notification = ({ message, error }) => {
   let notificationStyle = {
@@ -61,13 +61,9 @@ export const Notification = ({ message, error }) => {
     return null
   }
 
-  if (error===true) {
-    notificationStyle = {...notificationStyle, color:'red'}
+  if (error === true) {
+    notificationStyle = { ...notificationStyle, color: 'red' }
   }
 
-  return (
-    <div style={notificationStyle}>
-      {message}
-    </div>
-  )
+  return <div style={notificationStyle}>{message}</div>
 }
